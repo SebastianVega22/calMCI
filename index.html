@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de IMC con Recomendaciones</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: gold;
+        }
+        #opinionSection {
+            background-color: silver;
+            padding: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Calculadora de Índice de Masa Corporal (IMC)</h1>
+        <div class="text-center">
+            <i class="fas fa-dumbbell fa-3x"></i> <!-- Ícono de mancuerna -->
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-6">
+                <!-- Formulario de IMC -->
+                <form id="imcForm" class="mb-4">
+                    <div class="form-group">
+                        <label for="peso">Peso (kg): </label>
+                        <input type="number" id="peso" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="altura">Altura (m): </label>
+                        <input type="number" id="altura" step="0.01" class="form-control" required>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-block" onclick="calcularIMC()">Calcular IMC</button>
+                </form>
+
+                <!-- Resultados de IMC -->
+                <h2>Resultado:</h2>
+                <p id="resultado" class="font-weight-bold"></p>
+                <p id="diagnostico"></p>
+                <p id="dieta"></p>
+
+
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Font Awesome JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    <script>
+        let opiniones = [];
+
+        function calcularIMC() {
+            const peso = parseFloat(document.getElementById('peso').value);
+            const altura = parseFloat(document.getElementById('altura').value);
+
+            if (!peso || !altura) {
+                alert("Por favor, completa los campos de peso y altura.");
+                return;
+            }
+
+            const imc = (peso / (altura * altura)).toFixed(2);
+            let diagnostico = "";
+            let dieta = "";
+
+            if (imc < 18.5) {
+                diagnostico = "Bajo peso";
+                dieta = "Recomendación: Aumentar la ingesta calórica con alimentos ricos en nutrientes, como proteínas y carbohidratos saludables.";
+            } else if (imc >= 18.5 && imc < 24.9) {
+                diagnostico = "Peso normal";
+                dieta = "Recomendación: Mantén una dieta equilibrada rica en frutas, verduras, proteínas y grasas saludables.";
+            } else if (imc >= 25 && imc < 29.9) {
+                diagnostico = "Sobrepeso";
+                dieta = "Recomendación: Reducir la ingesta calórica, evitar azúcares y grasas, y aumentar el ejercicio físico.";
+            } else {
+                diagnostico = "Obesidad";
+                dieta = "Recomendación: Consulta a un nutricionista para una dieta específica, enfocada en la reducción de peso.";
+            }
+
+            document.getElementById("resultado").innerText = `Tu IMC es: ${imc}`;
+            document.getElementById("diagnostico").innerText = `Diagnóstico: ${diagnostico}`;
+            document.getElementById("dieta").innerText = `${dieta}`;
+        }
+
+        function guardarOpinion() {
+            const nombre = document.getElementById("nombre").value;
+            const opinion = document.getElementById("opinion").value;
+            if (nombre && opinion) {
+                opiniones.push(`Nombre: ${nombre}\nOpinión: ${opinion}`);
+                alert("Opinión guardada exitosamente.");
+                document.getElementById("opinionForm").reset();
+            } else {
+                alert("Por favor, completa ambos campos antes de guardar.");
+            }
+        }
+
+        function descargarTxt() {
+            if (opiniones.length === 0) {
+                alert("No hay opiniones guardadas.");
+                return;
+            }
+
+            const contenido = opiniones.join("\n\n");
+            const blob = new Blob([contenido], { type: "text/plain" });
+            const enlace = document.createElement("a");
+            enlace.href = URL.createObjectURL(blob);
+            enlace.download = "opiniones_usuarios.txt";
+            enlace.click();
+        }
+    </script>
+</body>
+</html>
